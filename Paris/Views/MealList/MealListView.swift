@@ -9,23 +9,25 @@ import SwiftUI
 
 struct MealListView: View {
     @StateObject private var viewModel = MealListViewModel()
-    
     var body: some View {
         NavigationView {
-            List(viewModel.meals) { meal in
-                MealRowView(meal: meal)
-            }
-            .navigationTitle("Desserts")
-            .overlay(Group {
-                if viewModel.isLoading {
-                    ProgressView()
+            VStack {
+                            
+                List(viewModel.filteredMeals) { meal in
+                    NavigationLink{
+                        MealDetailView(mealID: meal.id)
+                    } label: {
+                        MealRowView(meal: meal)
+                    }
                 }
-            })
-            .alert(item: Binding<AlertItem?>(
-                get: { viewModel.errorMessage.map { AlertItem(message: $0) } },
-                set: { _ in viewModel.errorMessage = nil }
-            )) { alertItem in
-                Alert(title: Text("Error"), message: Text(alertItem.message))
+                .listStyle(.plain)
+                .navigationTitle("Desserts")
+                .searchable(text: $viewModel.searchText)
+                .overlay(Group {
+                    if viewModel.isLoading {
+                        ProgressView()
+                    }
+                })
             }
         }
         .task {
@@ -33,15 +35,6 @@ struct MealListView: View {
         }
     }
 }
-
-
-
-struct AlertItem: Identifiable {
-    let id = UUID()
-    let message: String
-}
-
-
 
 
 #Preview {

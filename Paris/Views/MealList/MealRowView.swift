@@ -11,7 +11,7 @@ struct MealRowView: View {
     let meal: Meal
     
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
             AsyncImage(url: meal.thumbnailURL) { image in
                 image
                     .resizable()
@@ -23,6 +23,8 @@ struct MealRowView: View {
             .cornerRadius(8)
             
             Text(meal.name)
+                .font(.headline)
+            
         }
     }
 }

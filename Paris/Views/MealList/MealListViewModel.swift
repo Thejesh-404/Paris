@@ -11,26 +11,33 @@ import Foundation
 class MealListViewModel: ObservableObject {
     @Published var meals: [Meal] = []
     @Published var isLoading = false
-    @Published var errorMessage: String?
+    @Published var searchText: String = ""
+    
+    var filteredMeals: [Meal] {
+        if searchText.isEmpty {
+            return meals
+        } else {
+            return meals.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
     
     func fetchMeals() async {
-        
+       
         isLoading = true
-        errorMessage = nil
         
-        guard let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") else {
-            print("Invalid URL")
-            return
-        }
-
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let mealResponse = try JSONDecoder().decode(MealResponse.self, from: data)
-            meals = mealResponse.meals
+            meals = try await NetworkService.fetchMeals()
         } catch {
-            errorMessage = "Failed to fetch meals"
+            print("Failed to fetch meals: \(error)")
         }
         
         isLoading = false
     }
+}
+
+
+enum MealListError: Error {
+    case invalidURL
+    case invalidResponse
+    case invalidData
 }
