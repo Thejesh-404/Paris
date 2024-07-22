@@ -54,10 +54,12 @@ struct MealDetailView: View {
                         .font(.headline)
                         .padding(.top)
                     
-                    ForEach(Array(zip(meal.ingredients, meal.measures)), id: \.0) { ingredient, measure in
-                        Text("\(ingredient): \(measure)")
-                            .padding(.top, 2)
-                    }
+                    IngredientsTable(ingredients: meal.ingredients, measures: meal.measures)
+                    
+//                    ForEach(Array(zip(meal.ingredients, meal.measures)), id: \.0) { ingredient, measure in
+//                        Text("\(ingredient): \(measure)")
+//                            .padding(.top, 2)
+//                    }
                 }
                 .padding()
             } else if viewModel.isLoading {

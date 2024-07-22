@@ -17,7 +17,7 @@ struct MealListView: View {
                     NavigationLink{
                         MealDetailView(mealID: meal.id)
                     } label: {
-                        MealRowView(meal: meal)
+                        MealRow(meal: meal)
                     }
                 }
                 .listStyle(.plain)

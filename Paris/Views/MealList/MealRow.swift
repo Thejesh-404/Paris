@@ -1,5 +1,5 @@
 //
-//  MealRowView.swift
+//  MealRow.swift
 //  Paris
 //
 //  Created by Thejesh on 7/22/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MealRowView: View {
+struct MealRow: View {
     let meal: Meal
     
     var body: some View {
@@ -30,7 +30,7 @@ struct MealRowView: View {
 }
 
 #Preview {
-    MealRowView(meal:  Meal(
+    MealRow(meal:  Meal(
         id: "53049",
         name: "Apam balik",
         thumbnailURL: URL(string: "https://www.themealdb.com/images/media/meals/adxcbq1619787919.jpg")!
