@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MealDetailView: View {
     @StateObject private var viewModel = MealDetailViewModel()
+    @State private var imageScale: CGFloat = 0.8
     let mealID: String
     
     var body: some View {
@@ -19,39 +20,41 @@ struct MealDetailView: View {
                         AsyncImage(url: meal.thumbnailURL) { image in
                             image
                                 .resizable()
-                                .scaledToFit()
+                                .aspectRatio(contentMode: .fill)
                         } placeholder: {
                             ProgressView()
                         }
                         .frame(maxWidth: .infinity)
+                        .cornerRadius(8)
                         
-                        HStack {
-                            Spacer()
-                            Text("Category: \(meal.category)")
-                                .font(.subheadline)
-                            Spacer()
-                            Text("Area: \(meal.area)")
-                                .font(.subheadline)
-                            Spacer()
+                    
+                        
+                        VStack(alignment: .leading, spacing: 15) {
+                                Text("Instructions")
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                                
+                                Text(meal.instructions)
+                                    .font(.body)
+                                    .lineSpacing(5)
+                            
+                                HStack {
+                                    Label(meal.area, systemImage: "mappin.circle.fill")
+                                    Spacer()
+                                    if let youtubeURL = meal.youtubeURL {
+                                        Link(destination: youtubeURL) {
+                                            Label("Watch", systemImage: "play.circle.fill")
+                                        }
+                                    }
+                                }
                         }
-                        
-                        if let youtubeURL = meal.youtubeURL {
-                            Link("Watch on YouTube", destination: youtubeURL)
-                                .padding(.top)
-                        }
-                        
-                        Text("Instructions")
-                            .font(.headline)
-                            .padding(.top)
-                        
-                        Text(meal.instructions)
-                            .padding(.top)
-                        
-                        Text("Ingredients")
-                            .font(.headline)
-                            .padding(.top)
-                        
+                        .padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(8)
+                                                
                         IngredientsTable(ingredients: meal.ingredients, measures: meal.measures)
+                            .cornerRadius(8)
+                            
                     }
                     .padding()
                 }
