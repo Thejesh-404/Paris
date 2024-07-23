@@ -11,6 +11,7 @@ import Foundation
 class MealListViewModel: ObservableObject {
     @Published var meals: [Meal] = []
     @Published var isLoading = false
+    @Published var errorMessage: String?
     @Published var searchText: String = ""
     
     var filteredMeals: [Meal] {
@@ -22,13 +23,17 @@ class MealListViewModel: ObservableObject {
     }
     
     func fetchMeals() async {
-       
         isLoading = true
+        errorMessage = nil
         
         do {
             meals = try await NetworkService.fetchMeals()
         } catch {
-            print("Failed to fetch meals: \(error)")
+            if let networkError = error as? NetworkError {
+                errorMessage = networkError.localizedDescription
+            } else {
+                errorMessage = "An unexpected error occurred."
+            }
         }
         
         isLoading = false

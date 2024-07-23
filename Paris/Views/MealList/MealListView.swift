@@ -12,6 +12,13 @@ struct MealListView: View {
     var body: some View {
         NavigationView {
             VStack {
+                
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
                             
                 List(viewModel.filteredMeals) { meal in
                     NavigationLink{

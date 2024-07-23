@@ -20,7 +20,11 @@ class MealDetailViewModel: ObservableObject {
         do {
             meal = try await NetworkService.fetchMealDetails(mealID: mealID)
         } catch {
-            errorMessage = "Failed to fetch meal details"
+            if let networkError = error as? NetworkError {
+                errorMessage = networkError.localizedDescription
+            } else {
+                errorMessage = "An unexpected error occurred."
+            }
         }
         
         isLoading = false
