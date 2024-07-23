@@ -19,7 +19,7 @@ The app utilizes the following API endpoints:
 ## Requirements
 
 - Xcode 17.5
-- iOS 17.0 +
+- iOS 15.0 +
 - Swift 5.0+
 
 ## Installation
