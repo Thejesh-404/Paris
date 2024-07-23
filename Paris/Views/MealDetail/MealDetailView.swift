@@ -12,64 +12,64 @@ struct MealDetailView: View {
     let mealID: String
     
     var body: some View {
-        ScrollView {
+        ZStack {
             if let meal = viewModel.meal {
-                VStack(alignment: .leading) {
-                    AsyncImage(url: meal.thumbnailURL) { image in
-                        image
-                            .resizable()
-                            .scaledToFit()
-                    } placeholder: {
-                        ProgressView()
-                    }
-                    .frame(maxWidth: .infinity)
-
-                    
-                    HStack() {
-                        Spacer()
-                        Text("Category: \(meal.category)")
-                            .font(.subheadline)
-                        Spacer()
-                        Text("Area: \(meal.area)")
-                            .font(.subheadline)
-                        Spacer()
-                    }
-                    
-
-                    
-                    if let youtubeURL = meal.youtubeURL {
-                        Link("Watch on YouTube", destination: youtubeURL)
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        AsyncImage(url: meal.thumbnailURL) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(maxWidth: .infinity)
+                        
+                        HStack {
+                            Spacer()
+                            Text("Category: \(meal.category)")
+                                .font(.subheadline)
+                            Spacer()
+                            Text("Area: \(meal.area)")
+                                .font(.subheadline)
+                            Spacer()
+                        }
+                        
+                        if let youtubeURL = meal.youtubeURL {
+                            Link("Watch on YouTube", destination: youtubeURL)
+                                .padding(.top)
+                        }
+                        
+                        Text("Instructions")
+                            .font(.headline)
                             .padding(.top)
+                        
+                        Text(meal.instructions)
+                            .padding(.top)
+                        
+                        Text("Ingredients")
+                            .font(.headline)
+                            .padding(.top)
+                        
+                        IngredientsTable(ingredients: meal.ingredients, measures: meal.measures)
                     }
-                                        
-                    
-                    Text("Instructions")
-                        .font(.headline)
-                        .padding(.top)
-                    
-                    Text(meal.instructions)
-                        .padding(.top)
-                    
-                    Text("Ingredients")
-                        .font(.headline)
-                        .padding(.top)
-                    
-                    IngredientsTable(ingredients: meal.ingredients, measures: meal.measures)
-                    
-//                    ForEach(Array(zip(meal.ingredients, meal.measures)), id: \.0) { ingredient, measure in
-//                        Text("\(ingredient): \(measure)")
-//                            .padding(.top, 2)
-//                    }
+                    .padding()
                 }
-                .padding()
+                .navigationTitle(meal.name)
             } else if viewModel.isLoading {
-                ProgressView()
+                VStack {
+                    ProgressView()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(.systemBackground))
+                .ignoresSafeArea()
             } else if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
                     .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .padding()
             }
         }
-        .navigationTitle(viewModel.meal?.name ?? "Meal Details")
         .task {
             await viewModel.fetchMealDetails(mealID: mealID)
         }
@@ -81,4 +81,6 @@ struct MealDetailView: View {
         MealDetailView(mealID: "53049")
     }
 }
+
+
 
